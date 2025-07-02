@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
-import { Camera, Focus, Tripod, Zap, Settings, Plus } from 'lucide-react';
+import { Camera, Focus, Triangle, Zap, Settings, Plus } from 'lucide-react';
 
 const categories = [
   { name: 'Camera', icon: Camera },
   { name: 'Lens', icon: Focus },
-  { name: 'Tripods', icon: Tripod },
+  { name: 'Tripods', icon: Triangle },
   { name: 'Drone', icon: Settings },
   { name: 'Lights', icon: Zap },
   { name: 'Gimbals', icon: Settings },
