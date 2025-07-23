@@ -1,24 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>lens-haven-browser</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Rental</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .header nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .header nav a:hover {
+            color: #3498db;
+        }
+        .banner {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('banner.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        .banner h1 {
+            margin: 0;
+            font-size: 2.8em;
+            font-weight: 700;
+        }
+        .banner a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #3498db;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .banner a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #34495e;
+            padding: 10px 0;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 25px;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        .nav a:hover {
+            color: #3498db;
+        }
+        .container {
+            display: flex;
+            margin: 20px 40px;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-right: 30px;
+        }
+        .sidebar h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-size: 1.3em;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .sidebar .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .sidebar .search-box:focus {
+            border-color: #3498db;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .sidebar ul li {
+            margin: 10px 0;
+            color: #7f8c8d;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar ul li:hover {
+            color: #2c3e50;
+            background-color: #f0f0f0;
+        }
+        .sidebar ul li.active {
+            color: #3498db;
+            font-weight: 600;
+            background-color: #e6f3fa;
+        }
+        .content {
+            flex: 1;
+            padding-left: 0;
+        }
+        .content h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .item {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .item:hover {
+            transform: translateY(-5px);
+        }
+        .item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .item h4 {
+            margin: 15px 0;
+            color: #2c3e50;
+            font-size: 1.2em;
+        }
+        .item p {
+            margin: 10px 0;
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .item button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .item button:hover {
+            background-color: #2980b9;
+        }
+        .hidden {
+            display: none;
+        }
+        .nav a.active {
+            color: #3498db;
+            font-weight: 600;
+        }
+        .product-page, .contact-page {
+            display: none;
+            padding: 40px;
+            background-color: #fff;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .product-page.active, .contact-page.active {
+            display: block;
+        }
+        .product-page img, .contact-page img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .product-page h3, .contact-page h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .product-page p, .contact-page p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin: 5px 0;
+        }
+        .contact-page .contact-info {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .contact-page .contact-info p {
+            margin: 10px 0;
+        }
+        .contact-page form {
+            text-align: left;
+        }
+        .contact-page label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        .contact-page input, .contact-page textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .contact-page input:focus, .contact-page textarea:focus {
+            border-color: #3498db;
+        }
+        .contact-page textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        .contact-page button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .contact-page button:hover {
+            background-color: #2980b9;
+        }
+        .contact-page .map-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e0e0e0;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Camera Rental</h2>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#product">Product</a>
+            <a href="#contact">Contact Us</a>
+        </nav>
+    </div>
+    <div class="banner">
+        <h1>Best Quality Cameras on Hire</h1>
+        <a href="#explore">Explore Now</a>
+    </div>
+    <div class="nav" id="navLinks">
+        <a href="#" data-page="home" class="active">All</a>
+        <a href="#" data-page="camera">Camera</a>
+        <a href="#" data-page="lens">Lens</a>
+        <a href="#" data-page="gimbal">Gimbal</a>
+        <a href="#" data-page="tripod">Tripod</a>
+        <a href="#" data-page="drone">Drone</a>
+        <a href="#" data-page="accessories">Accessories</a>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Brands</h3>
+            <input type="text" class="search-box" placeholder="Search brands..." id="brandSearch">
+            <ul id="brandFilter">
+                <!-- Brands will be populated dynamically -->
+            </ul>
+        </div>
+        <div class="content">
+            <h2 id="categoryTitle">All Products</h2>
+            <div class="grid" id="productGrid">
+                <!-- Products will be populated dynamically -->
+            </div>
+            <div class="product-page" id="productPage">
+                <img src="" alt="Product Image" id="productImage">
+                <h3 id="productName"></h3>
+                <p><strong>Brand:</strong> <span id="productBrand"></span></p>
+                <p><strong>Category:</strong> <span id="productCategory"></span></p>
+                <p><strong>Price:</strong> <span id="productPrice"></span></p>
+                <p><strong>Description:</strong> <span id="productDescription"></span></p>
+                <button onclick="window.location.href='#'">Back to Products</button>
+            </div>
+            <div class="contact-page" id="contactPage">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <p><strong>Address:</strong> 123 Photography Lane, Mumbai, India</p>
+                    <p><strong>Phone:</strong> +91 98765 43210</p>
+                    <p><strong>Email:</strong> support@camerarental.com</p>
+                    <p><strong>Hours:</strong> Mon-Fri, 9:00 AM - 6:00 PM IST</p>
+                </div>
+                <form id="contactForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" required>
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+                <div class="map-placeholder">Map Placeholder (Integrate Google Maps API here)</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Product data array with 5 products per category
+        const products = [
+            // Cameras
+            { id: 1, name: "Sony Alpha 7 III", price: "₹1400", brand: "Sony", category: "camera", image: "https://via.placeholder.com/150", description: "A full-frame mirrorless camera with excellent low-light performance." },
+            { id: 2, name: "Canon EOS R5", price: "₹1600", brand: "Canon", category: "camera", image: "https://via.placeholder.com/150", description: "High-resolution mirrorless camera with 8K video capability." },
+            { id: 3, name: "Nikon Z6", price: "₹1500", brand: "Nikon", category: "camera", image: "https://via.placeholder.com/150", description: "Versatile full-frame camera with great dynamic range." },
+            { id: 4, name: "Panasonic Lumix S5", price: "₹1300", brand: "Panasonic", category: "camera", image: "https://via.placeholder.com/150", description: "Compact full-frame camera with 4K video." },
+            { id: 5, name: "Fujifilm X-T4", price: "₹1450", brand: "Fujifilm", category: "camera", image: "https://via.placeholder.com/150", description: "Mirrorless camera with advanced image stabilization." },
+            // Lenses
+            { id: 6, name: "Canon EF 50mm", price: "₹800", brand: "Canon", category: "lens", image: "https://via.placeholder.com/150", description: "Prime lens with f/1.8 aperture, ideal for portraits." },
+            { id: 7, name: "Nikon 85mm", price: "₹900", brand: "Nikon", category: "lens", image: "https://via.placeholder.com/150", description: "High-quality lens for professional portrait photography." },
+            { id: 8, name: "Sony 24-70mm", price: "₹1000", brand: "Sony", category: "lens", image: "https://via.placeholder.com/150", description: "Versatile zoom lens for professional use." },
+            { id: 9, name: "Canon 70-200mm", price: "₹1200", brand: "Canon", category: "lens", image: "https://via.placeholder.com/150", description: "Telephoto zoom lens for sports and wildlife." },
+            { id: 10, name: "Nikon 16-35mm", price: "₹1100", brand: "Nikon", category: "lens", image: "https://via.placeholder.com/150", description: "Wide-angle zoom lens for landscapes." },
+            // Gimbals
+            { id: 11, name: "DJI Ronin-S", price: "₹1200", brand: "DJI", category: "gimbal", image: "https://via.placeholder.com/150", description: "Stabilized gimbal for smooth video recording." },
+            { id: 12, name: "Zhiyun Weebill 2", price: "₹1100", brand: "Zhiyun", category: "gimbal", image: "https://via.placeholder.com/150", description: "Compact gimbal with advanced stabilization features." },
+            { id: 13, name: "DJI RS 2", price: "₹1300", brand: "DJI", category: "gimbal", image: "https://via.placeholder.com/150", description: "Professional gimbal with enhanced payload." },
+            { id: 14, name: "Zhiyun Crane 3S", price: "₹1400", brand: "Zhiyun", category: "gimbal", image: "https://via.placeholder.com/150", description: "Versatile gimbal for heavy camera setups." },
+            { id: 15, name: "Moza AirCross 2", price: "₹1250", brand: "Moza", category: "gimbal", image: "https://via.placeholder.com/150", description: "Lightweight gimbal with intuitive controls." },
+            // Tripods
+            { id: 16, name: "Manfrotto MT055XPRO3", price: "₹5000", brand: "Manfrotto", category: "tripod", image: "https://via.placeholder.com/150", description: "Professional aluminum tripod with fluid head." },
+            { id: 17, name: "Gitzo GT2542", price: "₹6000", brand: "Gitzo", category: "tripod", image: "https://via.placeholder.com/150", description: "Carbon fiber tripod for stability." },
+            { id: 18, name: "Benro Aero 2", price: "₹4500", brand: "Benro", category: "tripod", image: "https://via.placeholder.com/150", description: "Travel tripod with compact design." },
+            { id: 19, name: "Vanguard Alta Pro 263AB", price: "₹4000", brand: "Vanguard", category: "tripod", image: "https://via.placeholder.com/150", description: "Versatile tripod with multi-angle legs." },
+            { id: 20, name: "Slik Pro 700DX", price: "₹3500", brand: "Slik", category: "tripod", image: "https://via.placeholder.com/150", description: "Durable tripod for outdoor photography." },
+            // Drones
+            { id: 21, name: "DJI Mavic 2 Pro", price: "₹1500", brand: "DJI", category: "drone", image: "https://via.placeholder.com/150", description: "High-end drone with Hasselblad camera." },
+            { id: 22, name: "Autel EVO II", price: "₹1600", brand: "Autel", category: "drone", image: "https://via.placeholder.com/150", description: "Powerful drone with 8K video capability." },
+            { id: 23, name: "Parrot Anafi", price: "₹1400", brand: "Parrot", category: "drone", image: "https://via.placeholder.com/150", description: "Compact drone with 4K HDR video." },
+            { id: 24, name: "Skydio 2", price: "₹1700", brand: "Skydio", category: "drone", image: "https://via.placeholder.com/150", description: "AI-powered drone with obstacle avoidance." },
+            { id: 25, name: "DJI Mini 2", price: "₹800", brand: "DJI", category: "drone", image: "https://via.placeholder.com/150", description: "Lightweight drone for beginners." },
+            // Accessories
+            { id: 26, name: "SanDisk 64GB SD Card", price: "₹1500", brand: "SanDisk", category: "accessories", image: "https://via.placeholder.com/150", description: "High-speed SD card for cameras." },
+            { id: 27, name: "Godox V1 Flash", price: "₹1200", brand: "Godox", category: "accessories", image: "https://via.placeholder.com/150", description: "Round head flash with powerful output." },
+            { id: 28, name: "Rode VideoMic Pro+", price: "₹1000", brand: "Rode", category: "accessories", image: "https://via.placeholder.com/150", description: "Compact shotgun microphone for video." },
+            { id: 29, name: "Peak Design Capture Clip", price: "₹3000", brand: "Peak Design", category: "accessories", image: "https://via.placeholder.com/150", description: "Camera clip for quick access." },
+            { id: 30, name: "Battery Grip for Sony A7", price: "₹4000", brand: "Sony", category: "accessories", image: "https://via.placeholder.com/150", description: "Extended battery life for Sony cameras." }
+        ];
 
-    <meta property="og:title" content="lens-haven-browser" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#navLinks a');
+            const brandFilter = document.getElementById('brandFilter');
+            const brandSearch = document.getElementById('brandSearch');
+            const productGrid = document.getElementById('productGrid');
+            const productPage = document.getElementById('productPage');
+            const contactPage = document.getElementById('contactPage');
+            const contactForm = document.getElementById('contactForm');
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+            // Generate unique brands for sidebar filter
+            const brands = [...new Set(products.map(product => product.brand))];
+            brands.forEach(brand => {
+                const li = document.createElement('li');
+                li.setAttribute('data-brand', brand);
+                li.textContent = `${brand} (${products.filter(p => p.brand === brand).length})`;
+                brandFilter.appendChild(li);
+            });
+            const allBrand = document.createElement('li');
+            allBrand.setAttribute('data-brand', 'all');
+            allBrand.textContent = `All (${products.length})`;
+            allBrand.classList.add('active');
+            brandFilter.insertBefore(allBrand, brandFilter.firstChild);
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+            // Generate product grid dynamically
+            products.forEach(product => {
+                const item = document.createElement('div');
+                item.classList.add('item');
+                item.setAttribute('data-category', product.category);
+                item.setAttribute('data-brand', product.brand);
+                item.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h4>${product.name}</h4>
+                    <p>${product.price}</p>
+                    <button class="rent-btn" data-id="${product.id}">Rent Now</button>
+                `;
+                productGrid.appendChild(item);
+            });
+
+            const filterItems = document.querySelectorAll('#brandFilter li');
+            const allItems = document.querySelectorAll('.item');
+
+            // Navigation and page switching
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    const page = link.getAttribute('data-page');
+                    categoryTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1) + " Products";
+                    productGrid.classList.add('hidden');
+                    productPage.classList.add('hidden');
+                    contactPage.classList.add('hidden');
+                    if (page === 'home') {
+                        productGrid.classList.remove('hidden');
+                    } else if (page === 'contact') {
+                        contactPage.classList.remove('hidden');
+                    } else {
+                        productGrid.classList.remove('hidden');
+                        allItems.forEach(item => {
+                            if (item.getAttribute('data-category') === page) {
+                                item.classList.remove('hidden');
+                            } else {
+                                item.classList.add('hidden');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Sidebar filter
+            filterItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    filterItems.forEach(li => li.classList.remove('active'));
+                    item.classList.add('active');
+                    const brand = item.getAttribute('data-brand');
+                    const activePage = document.querySelector('#navLinks a.active').getAttribute('data-page');
+                    allItems.forEach(product => {
+                        const productCategory = product.getAttribute('data-category');
+                        const productBrand = product.getAttribute('data-brand');
+                        if (activePage === 'home' || productCategory === activePage) {
+                            if (brand === 'all' || productBrand === brand) {
+                                product.classList.remove('hidden');
+                            } else {
+                                product.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Brand search filter
+            brandSearch.addEventListener('input', () => {
+                const searchTerm = brandSearch.value.toLowerCase();
+                filterItems.forEach(item => {
+                    const brandName = item.getAttribute('data-brand').toLowerCase();
+                    if (brandName.includes(searchTerm) || brandName === 'all') {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+
+            // Rent Now button redirection
+            productGrid.addEventListener('click', (e) => {
+                if (e.target.classList.contains('rent-btn')) {
+                    const productId = parseInt(e.target.getAttribute('data-id'));
+                    const product = products.find(p => p.id === productId);
+                    document.getElementById('productImage').src = product.image;
+                    document.getElementById('productName').textContent = product.name;
+                    document.getElementById('productBrand').textContent = product.brand;
+                    document.getElementById('productCategory').textContent = product.category;
+                    document.getElementById('productPrice').textContent = product.price;
+                    document.getElementById('productDescription').textContent = product.description;
+                    productGrid.classList.add('hidden');
+                    productPage.classList.add('active');
+                }
+            });
+
+            // Back to Products button
+            document.querySelector('#productPage button').addEventListener('click', () => {
+                productPage.classList.remove('active');
+                productGrid.classList.remove('hidden');
+            });
+
+            // Contact form submission
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+                if (name && email && subject && message) {
+                    console.log('Form submitted:', { name, email, subject, message });
+                    alert('Thank you for your message! We will get back to you soon.');
+                    contactForm.reset();
+                } else {
+                    alert('Please fill out all fields.');
+                }
+            });
+
+            // Set "All" as default active for both nav and sidebar
+            navLinks[0].classList.add('active');
+            filterItems[0].classList.add('active');
+        });
+    </script>
+    <style>
+        .sidebar ul li.active {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+    </style>
+</body>
 </html>
