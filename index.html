@@ -39,7 +39,7 @@
         .banner {
             text-align: center;
             padding: 60px 0;
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('banner.png');
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Banner.jpeg');
             background-size: cover;
             background-position: center;
             color: white;
@@ -320,7 +320,7 @@
                 <!-- Products will be populated dynamically -->
             </div>
             <div class="product-page" id="productPage">
-                <img src="" alt="Product Image" id="productImage">
+                <img src="product.jpeg" alt="Product Image" id="productImage">
                 <h3 id="productName"></h3>
                 <p><strong>Brand:</strong> <span id="productBrand"></span></p>
                 <p><strong>Category:</strong> <span id="productCategory"></span></p>
@@ -355,41 +355,41 @@
         // Product data array with 5 products per category
         const products = [
             // Cameras
-            { id: 1, name: "Sony Alpha 7 III", price: "₹1400", brand: "Sony", category: "camera", image: "https://via.placeholder.com/150", description: "A full-frame mirrorless camera with excellent low-light performance." },
-            { id: 2, name: "Canon EOS R5", price: "₹1600", brand: "Canon", category: "camera", image: "https://via.placeholder.com/150", description: "High-resolution mirrorless camera with 8K video capability." },
-            { id: 3, name: "Nikon Z6", price: "₹1500", brand: "Nikon", category: "camera", image: "https://via.placeholder.com/150", description: "Versatile full-frame camera with great dynamic range." },
-            { id: 4, name: "Panasonic Lumix S5", price: "₹1300", brand: "Panasonic", category: "camera", image: "https://via.placeholder.com/150", description: "Compact full-frame camera with 4K video." },
-            { id: 5, name: "Fujifilm X-T4", price: "₹1450", brand: "Fujifilm", category: "camera", image: "https://via.placeholder.com/150", description: "Mirrorless camera with advanced image stabilization." },
+            { id: 1, name: "Sony Alpha 7 III", price: "₹1400", brand: "Sony", category: "camera", image: "product.jpeg", description: "A full-frame mirrorless camera with excellent low-light performance." },
+            { id: 2, name: "Canon EOS R5", price: "₹1600", brand: "Canon", category: "camera", image: "product.jpeg", description: "High-resolution mirrorless camera with 8K video capability." },
+            { id: 3, name: "Nikon Z6", price: "₹1500", brand: "Nikon", category: "camera", image: "product.jpeg", description: "Versatile full-frame camera with great dynamic range." },
+            { id: 4, name: "Panasonic Lumix S5", price: "₹1300", brand: "Panasonic", category: "camera", image: "product.jpeg", description: "Compact full-frame camera with 4K video." },
+            { id: 5, name: "Fujifilm X-T4", price: "₹1450", brand: "Fujifilm", category: "camera", image: "product.jpeg", description: "Mirrorless camera with advanced image stabilization." },
             // Lenses
-            { id: 6, name: "Canon EF 50mm", price: "₹800", brand: "Canon", category: "lens", image: "https://via.placeholder.com/150", description: "Prime lens with f/1.8 aperture, ideal for portraits." },
-            { id: 7, name: "Nikon 85mm", price: "₹900", brand: "Nikon", category: "lens", image: "https://via.placeholder.com/150", description: "High-quality lens for professional portrait photography." },
-            { id: 8, name: "Sony 24-70mm", price: "₹1000", brand: "Sony", category: "lens", image: "https://via.placeholder.com/150", description: "Versatile zoom lens for professional use." },
-            { id: 9, name: "Canon 70-200mm", price: "₹1200", brand: "Canon", category: "lens", image: "https://via.placeholder.com/150", description: "Telephoto zoom lens for sports and wildlife." },
-            { id: 10, name: "Nikon 16-35mm", price: "₹1100", brand: "Nikon", category: "lens", image: "https://via.placeholder.com/150", description: "Wide-angle zoom lens for landscapes." },
+            { id: 6, name: "Canon EF 50mm", price: "₹800", brand: "Canon", category: "lens", image: "product.jpeg", description: "Prime lens with f/1.8 aperture, ideal for portraits." },
+            { id: 7, name: "Nikon 85mm", price: "₹900", brand: "Nikon", category: "lens", image: "product.jpeg", description: "High-quality lens for professional portrait photography." },
+            { id: 8, name: "Sony 24-70mm", price: "₹1000", brand: "Sony", category: "lens", image: "product.jpeg", description: "Versatile zoom lens for professional use." },
+            { id: 9, name: "Canon 70-200mm", price: "₹1200", brand: "Canon", category: "lens", image: "product.jpeg", description: "Telephoto zoom lens for sports and wildlife." },
+            { id: 10, name: "Nikon 16-35mm", price: "₹1100", brand: "Nikon", category: "lens", image: "product.jpeg", description: "Wide-angle zoom lens for landscapes." },
             // Gimbals
-            { id: 11, name: "DJI Ronin-S", price: "₹1200", brand: "DJI", category: "gimbal", image: "https://via.placeholder.com/150", description: "Stabilized gimbal for smooth video recording." },
-            { id: 12, name: "Zhiyun Weebill 2", price: "₹1100", brand: "Zhiyun", category: "gimbal", image: "https://via.placeholder.com/150", description: "Compact gimbal with advanced stabilization features." },
-            { id: 13, name: "DJI RS 2", price: "₹1300", brand: "DJI", category: "gimbal", image: "https://via.placeholder.com/150", description: "Professional gimbal with enhanced payload." },
-            { id: 14, name: "Zhiyun Crane 3S", price: "₹1400", brand: "Zhiyun", category: "gimbal", image: "https://via.placeholder.com/150", description: "Versatile gimbal for heavy camera setups." },
-            { id: 15, name: "Moza AirCross 2", price: "₹1250", brand: "Moza", category: "gimbal", image: "https://via.placeholder.com/150", description: "Lightweight gimbal with intuitive controls." },
+            { id: 11, name: "DJI Ronin-S", price: "₹1200", brand: "DJI", category: "gimbal", image: "product.jpeg", description: "Stabilized gimbal for smooth video recording." },
+            { id: 12, name: "Zhiyun Weebill 2", price: "₹1100", brand: "Zhiyun", category: "gimbal", image: "product.jpeg", description: "Compact gimbal with advanced stabilization features." },
+            { id: 13, name: "DJI RS 2", price: "₹1300", brand: "DJI", category: "gimbal", image: "product.jpeg", description: "Professional gimbal with enhanced payload." },
+            { id: 14, name: "Zhiyun Crane 3S", price: "₹1400", brand: "Zhiyun", category: "gimbal", image: "product.jpeg", description: "Versatile gimbal for heavy camera setups." },
+            { id: 15, name: "Moza AirCross 2", price: "₹1250", brand: "Moza", category: "gimbal", image: "product.jpeg", description: "Lightweight gimbal with intuitive controls." },
             // Tripods
-            { id: 16, name: "Manfrotto MT055XPRO3", price: "₹5000", brand: "Manfrotto", category: "tripod", image: "https://via.placeholder.com/150", description: "Professional aluminum tripod with fluid head." },
-            { id: 17, name: "Gitzo GT2542", price: "₹6000", brand: "Gitzo", category: "tripod", image: "https://via.placeholder.com/150", description: "Carbon fiber tripod for stability." },
-            { id: 18, name: "Benro Aero 2", price: "₹4500", brand: "Benro", category: "tripod", image: "https://via.placeholder.com/150", description: "Travel tripod with compact design." },
-            { id: 19, name: "Vanguard Alta Pro 263AB", price: "₹4000", brand: "Vanguard", category: "tripod", image: "https://via.placeholder.com/150", description: "Versatile tripod with multi-angle legs." },
-            { id: 20, name: "Slik Pro 700DX", price: "₹3500", brand: "Slik", category: "tripod", image: "https://via.placeholder.com/150", description: "Durable tripod for outdoor photography." },
+            { id: 16, name: "Manfrotto MT055XPRO3", price: "₹5000", brand: "Manfrotto", category: "tripod", image: "product.jpeg", description: "Professional aluminum tripod with fluid head." },
+            { id: 17, name: "Gitzo GT2542", price: "₹6000", brand: "Gitzo", category: "tripod", image: "product.jpeg", description: "Carbon fiber tripod for stability." },
+            { id: 18, name: "Benro Aero 2", price: "₹4500", brand: "Benro", category: "tripod", image: "product.jpeg", description: "Travel tripod with compact design." },
+            { id: 19, name: "Vanguard Alta Pro 263AB", price: "₹4000", brand: "Vanguard", category: "tripod", image: "product.jpeg", description: "Versatile tripod with multi-angle legs." },
+            { id: 20, name: "Slik Pro 700DX", price: "₹3500", brand: "Slik", category: "tripod", image: "product.jpeg", description: "Durable tripod for outdoor photography." },
             // Drones
-            { id: 21, name: "DJI Mavic 2 Pro", price: "₹1500", brand: "DJI", category: "drone", image: "https://via.placeholder.com/150", description: "High-end drone with Hasselblad camera." },
-            { id: 22, name: "Autel EVO II", price: "₹1600", brand: "Autel", category: "drone", image: "https://via.placeholder.com/150", description: "Powerful drone with 8K video capability." },
-            { id: 23, name: "Parrot Anafi", price: "₹1400", brand: "Parrot", category: "drone", image: "https://via.placeholder.com/150", description: "Compact drone with 4K HDR video." },
-            { id: 24, name: "Skydio 2", price: "₹1700", brand: "Skydio", category: "drone", image: "https://via.placeholder.com/150", description: "AI-powered drone with obstacle avoidance." },
-            { id: 25, name: "DJI Mini 2", price: "₹800", brand: "DJI", category: "drone", image: "https://via.placeholder.com/150", description: "Lightweight drone for beginners." },
+            { id: 21, name: "DJI Mavic 2 Pro", price: "₹1500", brand: "DJI", category: "drone", image: "product.jpeg", description: "High-end drone with Hasselblad camera." },
+            { id: 22, name: "Autel EVO II", price: "₹1600", brand: "Autel", category: "drone", image: "product.jpeg", description: "Powerful drone with 8K video capability." },
+            { id: 23, name: "Parrot Anafi", price: "₹1400", brand: "Parrot", category: "drone", image: "product.jpeg", description: "Compact drone with 4K HDR video." },
+            { id: 24, name: "Skydio 2", price: "₹1700", brand: "Skydio", category: "drone", image: "product.jpeg", description: "AI-powered drone with obstacle avoidance." },
+            { id: 25, name: "DJI Mini 2", price: "₹800", brand: "DJI", category: "drone", image: "product.jpeg", description: "Lightweight drone for beginners." },
             // Accessories
-            { id: 26, name: "SanDisk 64GB SD Card", price: "₹1500", brand: "SanDisk", category: "accessories", image: "https://via.placeholder.com/150", description: "High-speed SD card for cameras." },
-            { id: 27, name: "Godox V1 Flash", price: "₹1200", brand: "Godox", category: "accessories", image: "https://via.placeholder.com/150", description: "Round head flash with powerful output." },
-            { id: 28, name: "Rode VideoMic Pro+", price: "₹1000", brand: "Rode", category: "accessories", image: "https://via.placeholder.com/150", description: "Compact shotgun microphone for video." },
-            { id: 29, name: "Peak Design Capture Clip", price: "₹3000", brand: "Peak Design", category: "accessories", image: "https://via.placeholder.com/150", description: "Camera clip for quick access." },
-            { id: 30, name: "Battery Grip for Sony A7", price: "₹4000", brand: "Sony", category: "accessories", image: "https://via.placeholder.com/150", description: "Extended battery life for Sony cameras." }
+            { id: 26, name: "SanDisk 64GB SD Card", price: "₹1500", brand: "SanDisk", category: "accessories", image: "product.jpeg", description: "High-speed SD card for cameras." },
+            { id: 27, name: "Godox V1 Flash", price: "₹1200", brand: "Godox", category: "accessories", image: "product.jpeg", description: "Round head flash with powerful output." },
+            { id: 28, name: "Rode VideoMic Pro+", price: "₹1000", brand: "Rode", category: "accessories", image: "product.jpeg", description: "Compact shotgun microphone for video." },
+            { id: 29, name: "Peak Design Capture Clip", price: "₹3000", brand: "Peak Design", category: "accessories", image: "product.jpeg", description: "Camera clip for quick access." },
+            { id: 30, name: "Battery Grip for Sony A7", price: "₹4000", brand: "Sony", category: "accessories", image: "product.jpeg", description: "Extended battery life for Sony cameras." }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
