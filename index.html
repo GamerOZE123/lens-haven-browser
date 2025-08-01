@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -131,7 +170,7 @@
             background-color: #f0f0f0;
         }
         .sidebar ul li.active {
-            color: #3498db;
+            color: #2c3e50;
             font-weight: 600;
             background-color: #e6f3fa;
         }
@@ -143,6 +182,44 @@
             color: #2c3e50;
             font-size: 2em;
             margin-bottom: 20px;
+        }
+        .product-search {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .product-search input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .product-search input:focus {
+            border-color: #3498db;
+        }
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .search-dropdown div {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-dropdown div:hover {
+            background-color: #f0f0f0;
         }
         .grid {
             display: grid;
@@ -196,7 +273,7 @@
             color: #3498db;
             font-weight: 600;
         }
-        .product-page, .contact-page {
+        .contact-page {
             display: none;
             padding: 40px;
             background-color: #fff;
@@ -204,22 +281,22 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        .product-page.active, .contact-page.active {
+        .contact-page.active {
             display: block;
         }
-        .product-page img, .contact-page img {
+        .contact-page img {
             width: 300px;
             height: 300px;
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 20px;
         }
-        .product-page h3, .contact-page h2 {
+        .contact-page h2 {
             color: #2c3e50;
             font-size: 2em;
             margin-bottom: 20px;
         }
-        .product-page p, .contact-page p {
+        .contact-page p {
             color: #7f8c8d;
             font-size: 1.1em;
             margin: 5px 0;
@@ -282,6 +359,41 @@
             justify-content: center;
             color: #7f8c8d;
         }
+        /* Mobile view adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .container {
+                margin: 20px;
+                flex-direction: column;
+            }
+            .content {
+                width: 100%;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                padding: 15px 20px;
+            }
+            .header h2 {
+                margin-bottom: 10px;
+            }
+            .header nav a {
+                margin: 0 10px;
+            }
+            .nav {
+                flex-wrap: wrap;
+            }
+            .nav a {
+                margin: 5px 10px;
+            }
+            .banner h1 {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -310,24 +422,15 @@
         <div class="sidebar">
             <h3>Brands</h3>
             <input type="text" class="search-box" placeholder="Search brands..." id="brandSearch">
-            <ul id="brandFilter">
-                <!-- Brands will be populated dynamically -->
-            </ul>
+            <ul id="brandFilter"></ul>
         </div>
         <div class="content">
             <h2 id="categoryTitle">All Products</h2>
-            <div class="grid" id="productGrid">
-                <!-- Products will be populated dynamically -->
+            <div class="product-search">
+                <input type="text" id="productSearch" placeholder="Search products...">
+                <div class="search-dropdown" id="searchDropdown"></div>
             </div>
-            <div class="product-page" id="productPage">
-                <img src="Product.jpeg" alt="Product Image" id="productImage">
-                <h3 id="productName"></h3>
-                <p><strong>Brand:</strong> <span id="productBrand"></span></p>
-                <p><strong>Category:</strong> <span id="productCategory"></span></p>
-                <p><strong>Price:</strong> <span id="productPrice"></span></p>
-                <p><strong>Description:</strong> <span id="productDescription"></span></p>
-                <button onclick="window.location.href='#'">Back to Products</button>
-            </div>
+            <div class="grid" id="productGrid"></div>
             <div class="contact-page" id="contactPage">
                 <h2>Contact Us</h2>
                 <div class="contact-info">
@@ -352,39 +455,32 @@
         </div>
     </div>
     <script>
-        // Product data array with 5 products per category
         const products = [
-            // Cameras
             { id: 1, name: "Sony Alpha 7 III", price: "₹1400", brand: "Sony", category: "camera", image: "Product.jpeg", description: "A full-frame mirrorless camera with excellent low-light performance." },
             { id: 2, name: "Canon EOS R5", price: "₹1600", brand: "Canon", category: "camera", image: "Product.jpeg", description: "High-resolution mirrorless camera with 8K video capability." },
             { id: 3, name: "Nikon Z6", price: "₹1500", brand: "Nikon", category: "camera", image: "Product.jpeg", description: "Versatile full-frame camera with great dynamic range." },
             { id: 4, name: "Panasonic Lumix S5", price: "₹1300", brand: "Panasonic", category: "camera", image: "Product.jpeg", description: "Compact full-frame camera with 4K video." },
             { id: 5, name: "Fujifilm X-T4", price: "₹1450", brand: "Fujifilm", category: "camera", image: "Product.jpeg", description: "Mirrorless camera with advanced image stabilization." },
-            // Lenses
             { id: 6, name: "Canon EF 50mm", price: "₹800", brand: "Canon", category: "lens", image: "Product.jpeg", description: "Prime lens with f/1.8 aperture, ideal for portraits." },
             { id: 7, name: "Nikon 85mm", price: "₹900", brand: "Nikon", category: "lens", image: "Product.jpeg", description: "High-quality lens for professional portrait photography." },
             { id: 8, name: "Sony 24-70mm", price: "₹1000", brand: "Sony", category: "lens", image: "Product.jpeg", description: "Versatile zoom lens for professional use." },
             { id: 9, name: "Canon 70-200mm", price: "₹1200", brand: "Canon", category: "lens", image: "Product.jpeg", description: "Telephoto zoom lens for sports and wildlife." },
             { id: 10, name: "Nikon 16-35mm", price: "₹1100", brand: "Nikon", category: "lens", image: "Product.jpeg", description: "Wide-angle zoom lens for landscapes." },
-            // Gimbals
             { id: 11, name: "DJI Ronin-S", price: "₹1200", brand: "DJI", category: "gimbal", image: "Product.jpeg", description: "Stabilized gimbal for smooth video recording." },
             { id: 12, name: "Zhiyun Weebill 2", price: "₹1100", brand: "Zhiyun", category: "gimbal", image: "Product.jpeg", description: "Compact gimbal with advanced stabilization features." },
             { id: 13, name: "DJI RS 2", price: "₹1300", brand: "DJI", category: "gimbal", image: "Product.jpeg", description: "Professional gimbal with enhanced payload." },
             { id: 14, name: "Zhiyun Crane 3S", price: "₹1400", brand: "Zhiyun", category: "gimbal", image: "Product.jpeg", description: "Versatile gimbal for heavy camera setups." },
             { id: 15, name: "Moza AirCross 2", price: "₹1250", brand: "Moza", category: "gimbal", image: "Product.jpeg", description: "Lightweight gimbal with intuitive controls." },
-            // Tripods
             { id: 16, name: "Manfrotto MT055XPRO3", price: "₹5000", brand: "Manfrotto", category: "tripod", image: "Product.jpeg", description: "Professional aluminum tripod with fluid head." },
             { id: 17, name: "Gitzo GT2542", price: "₹6000", brand: "Gitzo", category: "tripod", image: "Product.jpeg", description: "Carbon fiber tripod for stability." },
             { id: 18, name: "Benro Aero 2", price: "₹4500", brand: "Benro", category: "tripod", image: "Product.jpeg", description: "Travel tripod with compact design." },
             { id: 19, name: "Vanguard Alta Pro 263AB", price: "₹4000", brand: "Vanguard", category: "tripod", image: "Product.jpeg", description: "Versatile tripod with multi-angle legs." },
             { id: 20, name: "Slik Pro 700DX", price: "₹3500", brand: "Slik", category: "tripod", image: "Product.jpeg", description: "Durable tripod for outdoor photography." },
-            // Drones
             { id: 21, name: "DJI Mavic 2 Pro", price: "₹1500", brand: "DJI", category: "drone", image: "Product.jpeg", description: "High-end drone with Hasselblad camera." },
             { id: 22, name: "Autel EVO II", price: "₹1600", brand: "Autel", category: "drone", image: "Product.jpeg", description: "Powerful drone with 8K video capability." },
             { id: 23, name: "Parrot Anafi", price: "₹1400", brand: "Parrot", category: "drone", image: "Product.jpeg", description: "Compact drone with 4K HDR video." },
             { id: 24, name: "Skydio 2", price: "₹1700", brand: "Skydio", category: "drone", image: "Product.jpeg", description: "AI-powered drone with obstacle avoidance." },
             { id: 25, name: "DJI Mini 2", price: "₹800", brand: "DJI", category: "drone", image: "Product.jpeg", description: "Lightweight drone for beginners." },
-            // Accessories
             { id: 26, name: "SanDisk 64GB SD Card", price: "₹1500", brand: "SanDisk", category: "accessories", image: "Product.jpeg", description: "High-speed SD card for cameras." },
             { id: 27, name: "Godox V1 Flash", price: "₹1200", brand: "Godox", category: "accessories", image: "Product.jpeg", description: "Round head flash with powerful output." },
             { id: 28, name: "Rode VideoMic Pro+", price: "₹1000", brand: "Rode", category: "accessories", image: "Product.jpeg", description: "Compact shotgun microphone for video." },
@@ -397,9 +493,10 @@
             const brandFilter = document.getElementById('brandFilter');
             const brandSearch = document.getElementById('brandSearch');
             const productGrid = document.getElementById('productGrid');
-            const productPage = document.getElementById('productPage');
             const contactPage = document.getElementById('contactPage');
             const contactForm = document.getElementById('contactForm');
+            const productSearch = document.getElementById('productSearch');
+            const searchDropdown = document.getElementById('searchDropdown');
 
             // Generate unique brands for sidebar filter
             const brands = [...new Set(products.map(product => product.brand))];
@@ -442,8 +539,9 @@
                     const page = link.getAttribute('data-page');
                     categoryTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1) + " Products";
                     productGrid.classList.add('hidden');
-                    productPage.classList.add('hidden');
                     contactPage.classList.add('hidden');
+                    searchDropdown.style.display = 'none';
+                    productSearch.value = '';
                     if (page === 'home') {
                         productGrid.classList.remove('hidden');
                     } else if (page === 'contact') {
@@ -495,26 +593,58 @@
                 });
             });
 
+            // Product search with dropdown
+            productSearch.addEventListener('input', () => {
+                const searchTerm = productSearch.value.toLowerCase();
+                searchDropdown.innerHTML = '';
+                if (searchTerm) {
+                    const filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(searchTerm)
+                    );
+                    if (filteredProducts.length > 0) {
+                        filteredProducts.forEach(product => {
+                            const dropdownItem = document.createElement('div');
+                            dropdownItem.textContent = product.name;
+                            dropdownItem.setAttribute('data-id', product.id);
+                            searchDropdown.appendChild(dropdownItem);
+                            dropdownItem.addEventListener('click', () => {
+                                if (product.id === 1) {
+                                    window.location.href = 'sony-alpha-7-iii.html';
+                                } else if (product.id === 2) {
+                                    window.location.href = 'canon-eos-r5.html';
+                                } else {
+                                    window.location.href = `product-page.html?id=${product.id}`;
+                                }
+                            });
+                        });
+                        searchDropdown.style.display = 'block';
+                    } else {
+                        searchDropdown.style.display = 'none';
+                    }
+                } else {
+                    searchDropdown.style.display = 'none';
+                }
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!productSearch.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.style.display = 'none';
+                }
+            });
+
             // Rent Now button redirection
             productGrid.addEventListener('click', (e) => {
                 if (e.target.classList.contains('rent-btn')) {
                     const productId = parseInt(e.target.getAttribute('data-id'));
-                    const product = products.find(p => p.id === productId);
-                    document.getElementById('productImage').src = product.image;
-                    document.getElementById('productName').textContent = product.name;
-                    document.getElementById('productBrand').textContent = product.brand;
-                    document.getElementById('productCategory').textContent = product.category;
-                    document.getElementById('productPrice').textContent = product.price;
-                    document.getElementById('productDescription').textContent = product.description;
-                    productGrid.classList.add('hidden');
-                    productPage.classList.add('active');
+                    if (productId === 1) {
+                        window.location.href = 'sony-alpha-7-iii.html';
+                    } else if (productId === 2) {
+                        window.location.href = 'canon-eos-r5.html';
+                    } else {
+                        window.location.href = `product-page.html?id=${productId}`;
+                    }
                 }
-            });
-
-            // Back to Products button
-            document.querySelector('#productPage button').addEventListener('click', () => {
-                productPage.classList.remove('active');
-                productGrid.classList.remove('hidden');
             });
 
             // Contact form submission
