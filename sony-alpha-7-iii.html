@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,7 +16,7 @@
         .header {
             background-color: #2c3e50;
             color: white;
-            padding: 15px 40px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -65,10 +26,14 @@
             margin: 0;
             font-size: 1.8em;
         }
+        .header nav {
+            display: flex;
+            align-items: center;
+        }
         .header nav a {
             color: white;
             text-decoration: none;
-            margin-left: 30px;
+            margin-left: 20px;
             font-weight: 500;
             transition: color 0.3s;
         }
@@ -101,7 +66,7 @@
         .product-details h2 {
             color: #2c3e50;
             font-size: 1.8em;
-            margin: 0 0 15px;
+            margin: 10px 0 15px;
         }
         .product-details .price {
             color: #e74c3c;
@@ -158,11 +123,16 @@
         }
         .back-btn {
             display: inline-block;
-            margin-top: 20px;
+            margin-bottom: 20px;
             color: #3498db;
             text-decoration: none;
             font-weight: 500;
+            font-size: 1em;
             transition: color 0.3s;
+        }
+        .back-btn::before {
+            content: "← ";
+            font-size: 1.2em;
         }
         .back-btn:hover {
             color: #2980b9;
@@ -186,13 +156,19 @@
             }
             .header {
                 flex-direction: column;
-                padding: 15px 20px;
+                padding: 10px 20px;
+                text-align: center;
             }
             .header h2 {
                 margin-bottom: 10px;
+                font-size: 1.5em;
+            }
+            .header nav {
+                justify-content: center;
             }
             .header nav a {
-                margin: 0 10px;
+                margin: 0 15px;
+                font-size: 1em;
             }
         }
     </style>
@@ -201,8 +177,6 @@
     <div class="header">
         <h2>Camera Rental</h2>
         <nav>
-            <a href="index.html#home">Home</a>
-            <a href="template.html">2</a>
             <a href="index.html#contact">Contact Us</a>
         </nav>
     </div>
@@ -211,6 +185,7 @@
             <img src="Product.jpeg" alt="Sony Alpha 7 III">
         </div>
         <div class="product-details">
+            <a href="index.html" class="back-btn">Back to Products</a>
             <h2>Sony Alpha 7 III</h2>
             <div class="price">₹1400</div>
             <ul>
@@ -225,7 +200,6 @@
                 <input type="date" id="endDate" required>
             </div>
             <button class="rent-now-btn">Rent Now</button>
-            <a href="index.html" class="back-btn">Back to Products</a>
         </div>
     </div>
     <script>
@@ -235,7 +209,8 @@
                 const startDate = document.getElementById('startDate').value;
                 const endDate = document.getElementById('endDate').value;
                 if (startDate && endDate) {
-                    alert(`Rental request for Sony Alpha 7 III from ${startDate} to ${endDate} submitted!`);
+                    const message = encodeURIComponent(`Rental request for Sony Alpha 7 III from ${startDate} to ${endDate}`);
+                    window.location.href = `https://wa.me/9989426734?text=${message}`;
                 } else {
                     alert('Please select both start and end dates.');
                 }
