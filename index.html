@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camera Rental</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,12 +27,21 @@
             margin: 0;
             font-size: 1.8em;
         }
+        .header nav {
+            display: flex;
+            align-items: center;
+        }
         .header nav a {
             color: white;
             text-decoration: none;
-            margin-left: 30px;
+            margin-left: 20px;
             font-weight: 500;
             transition: color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .header nav a i {
+            margin-right: 8px;
         }
         .header nav a:hover {
             color: #3498db;
@@ -322,6 +332,23 @@
         }
         /* Mobile view adjustments */
         @media (max-width: 768px) {
+            .header {
+                padding: 10px 20px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .header h2 {
+                font-size: 1.4em;
+            }
+            .header nav a {
+                margin-left: 15px;
+                font-size: 0.9em;
+            }
+            .header nav a i {
+                font-size: 0.9em;
+                margin-right: 5px;
+            }
             .sidebar {
                 display: none;
             }
@@ -335,24 +362,14 @@
             .grid {
                 grid-template-columns: 1fr;
             }
-            .header {
-                flex-direction: column;
-                padding: 15px 20px;
-            }
-            .header h2 {
-                margin-bottom: 10px;
-            }
-            .header nav a {
-                margin: 0 10px;
+            .banner h1 {
+                font-size: 2em;
             }
             .nav {
                 flex-wrap: wrap;
             }
             .nav a {
                 margin: 5px 10px;
-            }
-            .banner h1 {
-                font-size: 2em;
             }
         }
     </style>
@@ -361,7 +378,7 @@
     <div class="header">
         <h2>Camera Rental</h2>
         <nav>
-            <a href="#contact">Contact Us</a>
+            <a href="#contact"><i class="fas fa-envelope"></i>Contact Us</a>
         </nav>
     </div>
     <div class="banner">
